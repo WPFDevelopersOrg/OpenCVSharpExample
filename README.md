@@ -23,4 +23,7 @@
 
 ###  效果展示  
 
-![0](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/PlayCamera.gif)  
+#### 1）PlayCamera
+![PlayCamera](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/PlayCamera.gif)   
+#### 2）SaveCamera
+![SaveCamera](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/SaveCamera.gif)   
