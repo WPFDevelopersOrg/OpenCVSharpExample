@@ -14,9 +14,13 @@
             <RowDefinition />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ComboBox Name="ComboBoxCamera" ItemsSource="{Binding CameraArray,RelativeSource={RelativeSource AncestorType=local:MainWindow}}" 
+        <WrapPanel HorizontalAlignment="Center">
+            <ComboBox Name="ComboBoxCamera" ItemsSource="{Binding CameraArray,RelativeSource={RelativeSource AncestorType=local:MainWindow}}" 
                   Width="200" SelectedIndex="{Binding CameraIndex,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
                   SelectionChanged="ComboBoxCamera_SelectionChanged"/>
+            <CheckBox IsChecked="{Binding IsSave,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
+                      VerticalAlignment="Center" Content="Save" Margin="10,0"/>
+        </WrapPanel>
         <Image Grid.Row="1" Name="imgViewport" Margin="0,4"/>
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Center"

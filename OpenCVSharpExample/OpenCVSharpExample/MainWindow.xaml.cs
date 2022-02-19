@@ -20,8 +20,10 @@ namespace OpenCVSharpExample
     public partial class MainWindow
     {
         private VideoCapture capCamera;
+        private VideoWriter videoWriter;
         private Mat matImage = new Mat();
         private Thread cameraThread;
+        private Thread writerThread;
 
         public List<string> CameraArray
         {
@@ -45,7 +47,27 @@ namespace OpenCVSharpExample
 
 
 
-        
+        public bool IsSave
+        {
+            get { return (bool)GetValue(IsSaveProperty); }
+            set { SetValue(IsSaveProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsSaveProperty =
+            DependencyProperty.Register("IsSave", typeof(bool), typeof(MainWindow), new UIPropertyMetadata(IsSaveChanged));
+
+        private static void IsSaveChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var mainWindow = d as MainWindow;
+            if (e.NewValue != null)
+            {
+                var save = (bool) e.NewValue;
+                if (save)
+                    mainWindow.StartRecording();
+                else
+                    mainWindow.StopRecording();
+            }
+        }
 
         public MainWindow()
         {
@@ -114,7 +136,40 @@ namespace OpenCVSharpExample
                 }));
             }
         }
-       
+        private void StartRecording()
+        {
+            var videoFile = System.IO.Path.Combine(System.Environment.CurrentDirectory, "Video");
+            if (!System.IO.Directory.Exists(videoFile))
+                System.IO.Directory.CreateDirectory(videoFile);
+            var currentTime = System.IO.Path.Combine(videoFile, $"{DateTime.Now.ToString("yyyyMMddHHmmsshh")}.avi");
+            videoWriter = new VideoWriter(currentTime, FourCCValues.XVID, capCamera.Fps, new OpenCvSharp.Size(capCamera.FrameWidth, capCamera.FrameHeight));
+
+            
+            writerThread = new Thread(AddCameraFrameToRecording);
+            writerThread.Start();
+        }
+        private void StopRecording()
+        {
+            if (videoWriter != null && !videoWriter.IsDisposed)
+            {
+                videoWriter.Release();
+                videoWriter.Dispose();
+                videoWriter = null;
+            }
+        }
+        private void AddCameraFrameToRecording()
+        {
+            var waitTimeBetweenFrames = 1_000 / capCamera.Fps;
+            var lastWrite = DateTime.Now;
+
+            while (!videoWriter.IsDisposed)
+            {
+                if (DateTime.Now.Subtract(lastWrite).TotalMilliseconds < waitTimeBetweenFrames)
+                    continue;
+                lastWrite = DateTime.Now;
+                videoWriter.Write(matImage);
+            }
+        }
         private void btStop_Click(object sender, RoutedEventArgs e)
         {
             StopDispose();
@@ -127,6 +182,13 @@ namespace OpenCVSharpExample
             {
                 capCamera.Dispose();
                 capCamera = null;
+            }
+           
+            if (videoWriter != null && !videoWriter.IsDisposed)
+            {
+                videoWriter.Release();
+                videoWriter.Dispose();
+                videoWriter = null;
             }
         }
 
@@ -145,15 +207,8 @@ namespace OpenCVSharpExample
             g.DrawString($"北京时间：{ now.ToString("yyyy年MM月dd日 HH:mm:ss")}", new System.Drawing.Font("Arial", 18), brush, new PointF(5, 5));
             brush.Dispose();
             g.Dispose();
-            MemoryStream ms = new MemoryStream();
-            img.Save(ms, ImageFormat.Bmp);
-            ms.Seek(0, SeekOrigin.Begin);
-            BitmapImage image = new BitmapImage();
-            image.BeginInit();
-            image.StreamSource = ms;
-            image.EndInit();
-            image.Freeze();
-            return image;
+            var writeableBitmap = WriteableBitmapHelper.BitmapToWriteableBitmap(src);
+            return WriteableBitmapHelper.ConvertWriteableBitmapToBitmapImage(writeableBitmap);
         }
 
         protected override void OnClosed(EventArgs e)
