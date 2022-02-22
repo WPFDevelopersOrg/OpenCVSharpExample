@@ -21,7 +21,9 @@
 |----|-----|
 |  <img src="https://github.com/WPFDevelopersOrg/ResourcesCache/raw/main/resources/Alipay.png"/>   |   <img src="https://github.com/WPFDevelopersOrg/ResourcesCache/raw/main/resources/WeChatPay.png"/>   |
 
-###  效果展示  
+###  效果展示 
+
+![main](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/main.png)  
 
 #### 1）PlayCamera
 ![PlayCamera](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/PlayCamera.gif)  
