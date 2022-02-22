@@ -8,25 +8,31 @@
         Icon="OpenCV_Logo.png"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Title="OpenCVSharpExample https://github.com/WPFDevelopersOrg" Height="450" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition />
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <WrapPanel HorizontalAlignment="Center">
-            <ComboBox Name="ComboBoxCamera" ItemsSource="{Binding CameraArray,RelativeSource={RelativeSource AncestorType=local:MainWindow}}" 
-                  Width="200" SelectedIndex="{Binding CameraIndex,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
+    <Grid Margin="4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Image Grid.Row="0" Name="imgViewport"/>
+        <GroupBox Header="Operation" Grid.Column="1" Margin="0,0,4,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                    <CheckBox IsChecked="{Binding IsSave,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
+                      VerticalAlignment="Center" Content="Save" Margin="0,4"/>
+                    <ComboBox Name="ComboBoxCamera" ItemsSource="{Binding CameraArray,RelativeSource={RelativeSource AncestorType=local:MainWindow}}" 
+                  SelectedIndex="{Binding CameraIndex,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
                   SelectionChanged="ComboBoxCamera_SelectionChanged"/>
-            <CheckBox IsChecked="{Binding IsSave,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
-                      VerticalAlignment="Center" Content="Save" Margin="10,0"/>
-        </WrapPanel>
-        <Image Grid.Row="1" Name="imgViewport" Margin="0,4"/>
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    Grid.Row="2">
-            <!--<Button Name="btRecord" Click="btRecord_Click" Content="Record" Style="{StaticResource PrimaryButton}" Width="100" Height="50" Margin="16"/>-->
-            <Button Name="btStop" Click="btStop_Click" Content="Stop"  Width="100" Height="50" Margin="16"/>
-        </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+                    <Button Name="btPlay" Content="Play" Style="{StaticResource PrimaryButton}" Click="btPlay_Click" IsEnabled="False"/>
+                    <Button Name="btStop" Click="btStop_Click" Content="Stop" Margin="4,0"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
     </Grid>
 </ws:Window>

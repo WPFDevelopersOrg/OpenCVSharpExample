@@ -2,6 +2,7 @@
 using OpenCvSharp.Extensions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -24,6 +25,10 @@ namespace OpenCVSharpExample
         private Mat matImage = new Mat();
         private Thread cameraThread;
         private Thread writerThread;
+        private CascadeClassifier haarCascade;
+        private WriteableBitmap writeableBitmap;
+        private Rectangle rectangle;
+
 
         public List<string> CameraArray
         {
@@ -68,16 +73,14 @@ namespace OpenCVSharpExample
                     mainWindow.StopRecording();
             }
         }
-
         public MainWindow()
         {
             InitializeComponent();
             Width = SystemParameters.WorkArea.Width / 1.5;
             Height = SystemParameters.WorkArea.Height / 1.5;
             this.Loaded += MainWindow_Loaded;
-
         }
-
+        
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeCamera();
@@ -93,10 +96,10 @@ namespace OpenCVSharpExample
                 StopDispose();
             }
 
-            capCamera = new VideoCapture(CameraIndex);
-            capCamera.Fps = 30;
+           
             CreateCamera();
-            
+            writeableBitmap = new WriteableBitmap(capCamera.FrameWidth, capCamera.FrameHeight, 0, 0, System.Windows.Media.PixelFormats.Bgra32, null);
+            imgViewport.Source = writeableBitmap;
         }
 
         private void InitializeCamera()
@@ -119,6 +122,8 @@ namespace OpenCVSharpExample
 
         void CreateCamera()
         {
+            capCamera = new VideoCapture(CameraIndex);
+            capCamera.Fps = 30;
             cameraThread = new Thread(PlayCamera);
             cameraThread.Start();
         }
@@ -129,15 +134,37 @@ namespace OpenCVSharpExample
             {
                 capCamera.Read(matImage);
                 if (matImage.Empty()) break;
-                Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                //Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                //{
+                //    var converted = Convert(BitmapConverter.ToBitmap(matImage));
+                //    imgViewport.Source = converted;
+                //}));
+                
+                using (var img = BitmapConverter.ToBitmap(matImage))
                 {
-                    var converted = Convert(BitmapConverter.ToBitmap(matImage));
-                    imgViewport.Source = converted;
-                }));
+                    var now = DateTime.Now;
+                    var g = Graphics.FromImage(img);
+                    var brush = new SolidBrush(System.Drawing.Color.Red);
+                    g.DrawString($"北京时间：{ now.ToString("yyyy年MM月dd日 HH:mm:ss")}", new System.Drawing.Font("Arial", 18), brush, new PointF(5, 5));
+                    rectangle = new Rectangle(0, 0, img.Width, img.Height);
+                    brush.Dispose();
+                    g.Dispose();
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        WriteableBitmapHelper.BitmapCopyToWriteableBitmap(img, writeableBitmap, rectangle, 0, 0, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                    }));
+                };
+
+                Thread.Sleep(100);
             }
         }
         private void StartRecording()
         {
+            if (capCamera == null)
+            {
+                WPFDevelopers.Minimal.Controls.MessageBox.Show("未开启摄像机","提示",MessageBoxButton.OKCancel,MessageBoxImage.Error);
+                return;
+            }
             var videoFile = System.IO.Path.Combine(System.Environment.CurrentDirectory, "Video");
             if (!System.IO.Directory.Exists(videoFile))
                 System.IO.Directory.CreateDirectory(videoFile);
@@ -190,6 +217,8 @@ namespace OpenCVSharpExample
                 videoWriter.Dispose();
                 videoWriter = null;
             }
+            btPlay.IsEnabled = true;
+            GC.Collect();
         }
 
         void CreateRecord()
@@ -197,7 +226,6 @@ namespace OpenCVSharpExample
             cameraThread = new Thread(PlayCamera);
             cameraThread.Start();
         }
-
         BitmapImage Convert(Bitmap src)
         {
             System.Drawing.Image img = src;
@@ -210,12 +238,24 @@ namespace OpenCVSharpExample
             var writeableBitmap = WriteableBitmapHelper.BitmapToWriteableBitmap(src);
             return WriteableBitmapHelper.ConvertWriteableBitmapToBitmapImage(writeableBitmap);
         }
-
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if(WPFDevelopers.Minimal.Controls.MessageBox.Show("是否关闭系统?", "询问", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK) 
+            {
+                e.Cancel = true;
+                return;
+            }
+        }
         protected override void OnClosed(EventArgs e)
         {
             StopDispose();
         }
 
-
+        private void btPlay_Click(object sender, RoutedEventArgs e)
+        {
+            btPlay.IsEnabled = false;
+            btStop.IsEnabled = true;
+            CreateCamera();
+        }
     }
 }

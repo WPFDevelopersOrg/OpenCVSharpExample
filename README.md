@@ -24,6 +24,11 @@
 ###  效果展示  
 
 #### 1）PlayCamera
-![PlayCamera](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/PlayCamera.gif)   
+![PlayCamera](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/PlayCamera.gif)  
+
+Article Link:https://mp.weixin.qq.com/s/kCHaC_Y8q0onu0gYOAM9ZA
+
 #### 2）SaveCamera
 ![SaveCamera](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/SaveCamera.gif)   
+
+Article Link:https://mp.weixin.qq.com/s/o1w8IZOZvDqx4ZP2h-sh5w
