@@ -114,6 +114,11 @@
   <ItemGroup>
     <Resource Include="OpenCV_Logo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\haarcascade_frontalface_default.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
