@@ -10,10 +10,11 @@
         Title="OpenCVSharpExample https://github.com/WPFDevelopersOrg" Height="450" Width="800">
     <Grid Margin="4">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition MinWidth="500" Width="8*"/>
+            <ColumnDefinition Width="2*" MinWidth="200"/>
         </Grid.ColumnDefinitions>
         <Image Grid.Row="0" Name="imgViewport"/>
+        <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Width="2"/>
         <GroupBox Header="Operation" Grid.Column="1" Margin="0,0,4,0">
             <Grid>
                 <Grid.RowDefinitions>
@@ -21,9 +22,11 @@
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                <StackPanel Grid.Row="0" HorizontalAlignment="Left">
                     <CheckBox IsChecked="{Binding IsSave,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
                       VerticalAlignment="Center" Content="Save" Margin="0,4"/>
+                    <CheckBox IsChecked="{Binding IsFace,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
+                      VerticalAlignment="Center" Content="Face" Margin="0,4"/>
                     <ComboBox Name="ComboBoxCamera" ItemsSource="{Binding CameraArray,RelativeSource={RelativeSource AncestorType=local:MainWindow}}" 
                   SelectedIndex="{Binding CameraIndex,RelativeSource={RelativeSource AncestorType=local:MainWindow}}"
                   SelectionChanged="ComboBoxCamera_SelectionChanged"/>
