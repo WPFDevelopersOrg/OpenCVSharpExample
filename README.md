@@ -34,3 +34,8 @@ Article Link:https://mp.weixin.qq.com/s/kCHaC_Y8q0onu0gYOAM9ZA
 ![SaveCamera](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/SaveCamera.gif)   
 
 Article Link:https://mp.weixin.qq.com/s/o1w8IZOZvDqx4ZP2h-sh5w
+
+#### 3）FaceCamera
+![FaceCamera](https://raw.githubusercontent.com/WPFDevelopersOrg/ResourcesCache/main/resources/OpenCVSharpExampleResource/FaceCamera.gif)   
+
+Article Link:https://mp.weixin.qq.com/s/o1w8IZOZvDqx4ZP2h-sh5w
